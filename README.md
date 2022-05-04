@@ -1,2 +1,3 @@
 # bregana
-a source code manager (incomplete)
+
+a 3d reference image tool (incomplete)
