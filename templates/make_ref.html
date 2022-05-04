@@ -41,6 +41,8 @@
   </style>
 
   <script>
+  canvasWidth = 1200;
+  canvasHeight = 600;
   function drawRefLine(e, ctx) {
     var canvasOffset = $("#divider_canvas").offset();
     var offsetX = canvasOffset.left;
@@ -50,17 +52,17 @@
     mouseY = parseInt(e.clientY - offsetY);
     var randomColor = Math.floor(Math.random()*16777215).toString(16);
     if (e.ctrlKey == false) {
-      drawLine(ctx, [0, mouseY], [1200, mouseY], "#" + randomColor, 1)
+      drawLine(ctx, [0, mouseY], [canvasWidth, mouseY], "#" + randomColor, 1)
     } else {
       // erase line
-      ctx.clearRect(0, mouseY-1, 1200, 2);
+      ctx.clearRect(0, mouseY-1, canvasWidth, 2);
     }
 
   }
 
   $(document).ready(function() {
     $(".t").click(function(e) {
-      $(".t").removeClass("active")
+      $(".t").removeClass("active");
       $(e.target).addClass("active");
     });
 
@@ -71,13 +73,19 @@
     var refLinesCanvasCtx = refLinesCanvas.getContext('2d');
 
     // draw divider line
-    drawLine(dividerCanvasCtx, [600, 0], [600, 600], "black", 1)
+    drawLine(dividerCanvasCtx, [canvasWidth/2, 0], [canvasWidth/2, canvasHeight], "black", 1)
 
     $("#divider_canvas").mousedown(function (e) {
       if ( $(".t.active").attr("id") == "ref_line" ) {
         drawRefLine(e, refLinesCanvasCtx);
       }
     });
+
+    $("#clear_ref_lines").click(function(e) {
+      refLinesCanvasCtx.clearRect(0, 0, canvasWidth, canvasHeight)
+      $(".t").removeClass("active");
+      $("#ref_line").addClass("active")
+    })
 
 
   })
@@ -106,6 +114,7 @@
     <button class="t" id="move">Move</button><br>
     <button class="t" id="sym">Symmetrize</button><br>
     <button class="t" id="ref_line">Reference<br>Line</button><br>
+    <button class="t" id="clear_ref_lines">Clear All<br>Reference<br>Lines</button><br>
   </div>
 
   <div id="drawing_board" class="pane">
