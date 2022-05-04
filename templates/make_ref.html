@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Make Reference Image</title>
+  <script src="/gs/jquery-3.6.0.min.js"></script>
+  <style>
+    #left_side {
+      width: 90px;
+      float: left;
+    }
+
+    #drawing_board {
+      width: auto;
+      float: left;
+    }
+
+    #right_side {
+      width: 400px;
+      float: left;
+    }
+    #drawing_board, #right_side {
+      margin-left: 10px;
+    }
+    .pane h2 {
+      width: fit-content;
+      margin: 0 auto;
+      margin-bottom: 5px;
+    }
+    canvas {
+      border: 1px solid gray;
+    }
+    h2, h3 {
+      margin: 0px;
+    }
+    .t {
+      margin-bottom: 10px;
+      border: 1px solid gray;
+    }
+    .t.active {
+      border: 1px solid green;
+      background-color: #666;
+      color: white;
+    }
+  </style>
+
+  <script>
+  $(document).ready(function() {
+    $(".t").click(function(e) {
+      $(".t").removeClass("active")
+      $(e.target).addClass("active");
+    })
+  })
+  </script>
+</head>
+<body>
+  <div id="left_side" class="pane">
+    <h2>Tools</h2>
+    <button class="t" id="select">Select</button><br>
+    <button class="t" id="ref_line">Straight Line</button><br>
+    <button class="t" id="eraser">Eraser</button><br>
+    <button class="t" id="pencil">Pencil</button><br>
+    <button class="t" id="zoom">Zoom</button><br>
+    <button class="t" id="cut">Cut Image</button><br>
+    <button class="t" id="paste">Paste Image</button><br>
+  </div>
+
+  <div id="drawing_board" class="pane">
+    <h2>Canvas</h2>
+    <canvas id="canvas_one" width="1000" height="500"></canvas>
+  </div>
+
+  <div id="right_side" class="pane">
+    <h2>Attributes</h2>
+
+  </div>
+</body>
+</html>
