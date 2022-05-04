@@ -3,11 +3,11 @@ package main
 import (
   "os/exec"
 	"runtime"
-	"os/signal"
+	// "os/signal"
   "fmt"
   "github.com/gorilla/mux"
 	"net/http"
-  "os"
+  // "os"
   "html/template"
 )
 
@@ -15,7 +15,7 @@ import (
 func main() {
   port := "15267"
 
-  go func() {
+  // go func() {
     r := mux.NewRouter()
 
     r.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
@@ -53,19 +53,20 @@ func main() {
 			fmt.Println(err)
 			panic(err)
 		}
-  }()
 
-	fmt.Printf("Running at http://127.0.0.1:%s\n", port)
-	if runtime.GOOS == "windows" {
-		exec.Command("cmd", "/C", "start", fmt.Sprintf("http://127.0.0.1:%s", port)).Output()
-	} else if runtime.GOOS == "linux" {
-		exec.Command("xdg-open", fmt.Sprintf("http://127.0.0.1:%s/make_ref", port) ).Run()
-	}
-	// Wait until the interrupt signal arrives or browser window is closed
-	sigc := make(chan os.Signal)
-	signal.Notify(sigc, os.Interrupt)
-	select {
-	case <-sigc:
-	}
-	fmt.Println("Exiting")
+  // }()
+
+	// fmt.Printf("Running at http://127.0.0.1:%s\n", port)
+	// if runtime.GOOS == "windows" {
+	// 	exec.Command("cmd", "/C", "start", fmt.Sprintf("http://127.0.0.1:%s", port)).Output()
+	// } else if runtime.GOOS == "linux" {
+	// 	exec.Command("xdg-open", fmt.Sprintf("http://127.0.0.1:%s/make_ref", port) ).Run()
+	// }
+	// // Wait until the interrupt signal arrives or browser window is closed
+	// sigc := make(chan os.Signal)
+	// signal.Notify(sigc, os.Interrupt)
+	// select {
+	// case <-sigc:
+	// }
+	// fmt.Println("Exiting")
 }

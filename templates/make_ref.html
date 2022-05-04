@@ -10,14 +10,10 @@
     }
 
     #drawing_board {
-      width: auto;
+      width: 1200px;
       float: left;
     }
 
-    #right_side {
-      width: 400px;
-      float: left;
-    }
     #drawing_board, #right_side {
       margin-left: 10px;
     }
@@ -28,6 +24,7 @@
     }
     canvas {
       border: 1px solid gray;
+      position: absolute;
     }
     h2, h3 {
       margin: 0px;
@@ -44,34 +41,79 @@
   </style>
 
   <script>
+  function drawRefLine(e, ctx) {
+    var canvasOffset = $("#divider_canvas").offset();
+    var offsetX = canvasOffset.left;
+    var offsetY = canvasOffset.top;
+
+    mouseX = parseInt(e.clientX - offsetX);
+    mouseY = parseInt(e.clientY - offsetY);
+    var randomColor = Math.floor(Math.random()*16777215).toString(16);
+    if (e.ctrlKey == false) {
+      drawLine(ctx, [0, mouseY], [1200, mouseY], "#" + randomColor, 1)
+    } else {
+      // erase line
+      ctx.clearRect(0, mouseY-1, 1200, 2);
+    }
+
+  }
+
   $(document).ready(function() {
     $(".t").click(function(e) {
       $(".t").removeClass("active")
       $(e.target).addClass("active");
-    })
+    });
+
+    var dividerCanvas = document.getElementById('divider_canvas');
+    var dividerCanvasCtx = dividerCanvas.getContext('2d');
+
+    var refLinesCanvas = document.getElementById('reflines_canvas');
+    var refLinesCanvasCtx = refLinesCanvas.getContext('2d');
+
+    // draw divider line
+    drawLine(dividerCanvasCtx, [600, 0], [600, 600], "black", 1)
+
+    $("#divider_canvas").mousedown(function (e) {
+      if ( $(".t.active").attr("id") == "ref_line" ) {
+        drawRefLine(e, refLinesCanvasCtx);
+      }
+    });
+
+
   })
+
+  function drawLine(ctx, begin, end, stroke = 'black', width = 1) {
+    if (stroke) {
+      ctx.strokeStyle = stroke;
+    }
+
+    if (width) {
+      ctx.lineWidth = width;
+    }
+
+    ctx.beginPath();
+    ctx.moveTo(...begin);
+    ctx.lineTo(...end);
+    ctx.stroke();
+  }
   </script>
 </head>
 <body>
   <div id="left_side" class="pane">
     <h2>Tools</h2>
-    <button class="t" id="select">Select</button><br>
-    <button class="t" id="ref_line">Straight Line</button><br>
-    <button class="t" id="eraser">Eraser</button><br>
     <button class="t" id="pencil">Pencil</button><br>
-    <button class="t" id="zoom">Zoom</button><br>
-    <button class="t" id="cut">Cut Image</button><br>
-    <button class="t" id="paste">Paste Image</button><br>
+    <button class="t" id="draw_mask">Draw Mask<br>Rectangle</button><br>
+    <button class="t" id="move">Move</button><br>
+    <button class="t" id="sym">Symmetrize</button><br>
+    <button class="t" id="ref_line">Reference<br>Line</button><br>
   </div>
 
   <div id="drawing_board" class="pane">
     <h2>Canvas</h2>
-    <canvas id="canvas_one" width="1000" height="500"></canvas>
+    <canvas id="drawing_canvas" width="1200" height="600" style="z-index: 10;"></canvas>
+    <canvas id="reflines_canvas" width="1200" height="600" style="z-index: 30;"></canvas>
+    <canvas id="divider_canvas" width="1200" height="600" style="z-index: 60;"></canvas>
   </div>
 
-  <div id="right_side" class="pane">
-    <h2>Attributes</h2>
-
-  </div>
 </body>
 </html>
