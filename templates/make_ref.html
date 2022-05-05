@@ -5,7 +5,7 @@
   <script src="/gs/jquery-3.6.0.min.js"></script>
   <style>
     #left_side {
-      width: 90px;
+      width: 100px;
       float: left;
     }
 
@@ -43,6 +43,7 @@
   <script>
   canvasWidth = 1200;
   canvasHeight = 600;
+
   function drawRefLine(e, ctx) {
     var canvasOffset = $("#divider_canvas").offset();
     var offsetX = canvasOffset.left;
@@ -68,25 +69,37 @@
 
     var dividerCanvas = document.getElementById('divider_canvas');
     var dividerCanvasCtx = dividerCanvas.getContext('2d');
+    // draw divider line
+    drawLine(dividerCanvasCtx, [canvasWidth/2, 0], [canvasWidth/2, canvasHeight], "black", 1)
 
     var refLinesCanvas = document.getElementById('reflines_canvas');
     var refLinesCanvasCtx = refLinesCanvas.getContext('2d');
 
-    // draw divider line
-    drawLine(dividerCanvasCtx, [canvasWidth/2, 0], [canvasWidth/2, canvasHeight], "black", 1)
+    var masksCanvas = document.getElementById('masks_canvas');
+    var masksCanvasCtx = masksCanvas.getContext('2d');
+
 
     var drawingCanvas = document.getElementById("drawing_canvas");
     var drawingCanvasCtx = drawingCanvas.getContext("2d");
     var lastX;
     var lastY;
-    var strokeColor="red";
-    var strokeWidth=5;
     var mouseX;
     var mouseY;
     var canvasOffset=$("#divider_canvas").offset();
     var offsetX=canvasOffset.left;
     var offsetY=canvasOffset.top;
     var isMouseDown=false;
+
+    // these vars will hold the starting mouse position
+    var startX;
+    var startY;
+
+    // masks variables
+    var maskDrawn = false;
+    var maskBeginX;
+    var maskBeginY;
+    var maskWidth;
+    var maskHeight;
 
     $("#divider_canvas").mousedown(function (e) {
       if ( $(".t.active").attr("id") == "ref_line" ) {
@@ -99,6 +112,23 @@
         lastX = mouseX;
         lastY = mouseY;
         isMouseDown = true;
+
+      } else if ( $(".t.active").attr("id") == "draw_mask" ) {
+
+        // save the starting x/y of the rectangle
+        startX = parseInt(e.clientX - offsetX);
+        startY = parseInt(e.clientY - offsetY);
+
+        isMouseDown = true;
+
+      } else if ( $(".t.active").attr("id") == "move" ) {
+
+        // save the starting x/y of the rectangle
+        startX = parseInt(e.clientX - offsetX);
+        startY = parseInt(e.clientY - offsetY);
+
+        isMouseDown = true;
+
       }
 
     });
@@ -135,7 +165,39 @@
 
         lastX = mouseX;
         lastY = mouseY;
+      } else if ( $(".t.active").attr("id") == "draw_mask" && isMouseDown) {
+        // get the current mouse position
+        mouseX = parseInt(e.clientX - offsetX);
+        mouseY = parseInt(e.clientY - offsetY);
+
+        // Put your mousemove stuff here
+        if (e.ctrlKey == false) {
+          // clear the canvas
+          masksCanvasCtx.clearRect(0, 0, masksCanvas.width, masksCanvas.height);
+
+          // calculate the rectangle width/height based
+          // on starting vs current mouse position
+          var width = mouseX - startX;
+          var height = mouseY - startY;
+
+          // draw a new rect from the start position
+          // to the current mouse position
+          masksCanvasCtx.setLineDash([6]);
+          // masksCanvasCtx.setStrokeColor("gray")
+          masksCanvasCtx.strokeRect(startX, startY, width, height);
+          // store the mask
+          maskDrawn = true;
+          maskBeginX = startX
+          maskBeginY = startY
+          maskWidth = width
+          maskHeight = height
+        } else {
+          masksCanvasCtx.clearRect(0, 0, masksCanvas.width, masksCanvas.height);
+          maskDrawn = false;
+        }
+
       }
+
     })
 
     $("#clear_ref_lines").click(function(e) {
@@ -144,6 +206,30 @@
       $("#ref_line").addClass("active")
     })
 
+
+    $("#divider_canvas").click(function (e) {
+      if ( $(".t.active").attr("id") == "move" && maskDrawn ) {
+        // get the current mouse position
+        mouseX = parseInt(e.clientX - offsetX);
+        mouseY = parseInt(e.clientY - offsetY);
+
+        var imageData = drawingCanvasCtx.getImageData(maskBeginX, maskBeginY, maskWidth, maskHeight)
+        drawingCanvasCtx.clearRect(maskBeginX, maskBeginY, maskWidth, maskHeight)
+        drawingCanvasCtx.putImageData(imageData, mouseX, mouseY)
+        
+        masksCanvasCtx.clearRect(0, 0, masksCanvas.width, masksCanvas.height);
+        masksCanvasCtx.setLineDash([6]);
+        // masksCanvasCtx.setStrokeColor("gray")
+        masksCanvasCtx.strokeRect(mouseX, mouseY, maskWidth, maskHeight);
+
+        // update mask variables
+        maskDrawn = true;
+        maskBeginX = startX
+        maskBeginY = startY
+        maskWidth = width
+        maskHeight = height
+      }
+    })
 
   })
 
@@ -167,10 +253,12 @@
 <body>
   <div id="left_side" class="pane">
     <h2>Tools</h2>
+    <br><br>
     <button class="t" id="pencil">Pencil</button><br>
     <hr>
     <button class="t" id="draw_mask">Draw Mask<br>Rectangle</button><br>
     <button class="t" id="move">Move</button><br>
+    <button class="t" id="center">Center Drawn<br>Image</button><br>
     <button class="t" id="sym">Symmetrize</button><br>
     <hr>
     <button class="t" id="ref_line">Reference<br>Line</button><br>
@@ -180,7 +268,8 @@
   <div id="drawing_board" class="pane">
     <h2>Canvas</h2>
     <canvas id="drawing_canvas" width="1200" height="600" style="z-index: 10;"></canvas>
-    <canvas id="reflines_canvas" width="1200" height="600" style="z-index: 30;"></canvas>
+    <canvas id="masks_canvas" width="1200" height="600" style="z-index: 20;"></canvas>
+    <canvas id="reflines_canvas" width="1200" height="600" style="z-index: 40;"></canvas>
     <canvas id="divider_canvas" width="1200" height="600" style="z-index: 60;"></canvas>
     <h3 style="margin-top: 610px;">Help</h3>
     <p>When using a tool like <b>pencil</b>, <b>reference line</b> press ctrl to invert the tool</p>
