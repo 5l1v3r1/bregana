@@ -205,29 +205,32 @@
     })
 
     $("#symm").click(function(e) {
-      drawingCanvasCtx.clearRect(0, 0, canvasWidth/2, canvasHeight)
-      // clear mask
-      masksCanvasCtx.clearRect(0, 0, masksCanvas.width, masksCanvas.height);
-      maskDrawn = false;
+      if (maskDrawn) {
+        drawingCanvasCtx.clearRect(0, 0, canvasWidth/2, canvasHeight)
+        // clear mask
+        masksCanvasCtx.clearRect(0, 0, masksCanvas.width, masksCanvas.height);
+        maskDrawn = false;
 
-      var x1 = maskBeginX + maskWidth
-      var widthOfCutMask = x1 - (canvasWidth/2)
+        var x1 = maskBeginX + maskWidth
+        var widthOfCutMask = x1 - (canvasWidth/2)
 
-      if (widthOfCutMask > 0) {
-        drawingCanvasCtx.save()
-        var imageData = drawingCanvasCtx.getImageData(canvasWidth/2, maskBeginY, widthOfCutMask, maskHeight)
+        if (widthOfCutMask > 0) {
+          drawingCanvasCtx.save()
+          var imageData = drawingCanvasCtx.getImageData(canvasWidth/2, maskBeginY, widthOfCutMask, maskHeight)
 
-        memCanvas = document.createElement('canvas');
-        // document.body.appendChild(memCanvas);
-        memCanvas.width = imageData.width
-        memCanvas.height = imageData.height
+          memCanvas = document.createElement('canvas');
+          // document.body.appendChild(memCanvas);
+          memCanvas.width = imageData.width
+          memCanvas.height = imageData.height
 
 
-        var memCanvasCtx = memCanvas.getContext("2d")
-        memCanvasCtx.putImageData(imageData, 0, 0)
-        drawingCanvasCtx.scale(-1, 1)
-        drawingCanvasCtx.drawImage(memCanvas, -(canvasWidth/2), maskBeginY )
-        drawingCanvasCtx.restore()
+          var memCanvasCtx = memCanvas.getContext("2d")
+          memCanvasCtx.putImageData(imageData, 0, 0)
+          drawingCanvasCtx.scale(-1, 1)
+          drawingCanvasCtx.drawImage(memCanvas, -(canvasWidth/2), maskBeginY )
+          drawingCanvasCtx.restore()
+        }
+
       }
 
       $(".t").removeClass("active")
@@ -236,25 +239,30 @@
 
     $("#divider_canvas").click(function (e) {
       if ( $(".t.active").attr("id") == "move" && maskDrawn ) {
-        // get the current mouse position
-        mouseX = parseInt(e.clientX - offsetX);
-        mouseY = parseInt(e.clientY - offsetY);
+        if (e.ctrlKey == false) {
+          // get the current mouse position
+          mouseX = parseInt(e.clientX - offsetX);
+          mouseY = parseInt(e.clientY - offsetY);
 
-        var imageData = drawingCanvasCtx.getImageData(maskBeginX, maskBeginY, maskWidth, maskHeight)
-        drawingCanvasCtx.clearRect(maskBeginX, maskBeginY, maskWidth, maskHeight)
-        drawingCanvasCtx.putImageData(imageData, mouseX, mouseY)
+          var imageData = drawingCanvasCtx.getImageData(maskBeginX, maskBeginY, maskWidth, maskHeight)
+          drawingCanvasCtx.clearRect(maskBeginX, maskBeginY, maskWidth, maskHeight)
+          drawingCanvasCtx.putImageData(imageData, mouseX, mouseY)
 
-        masksCanvasCtx.clearRect(0, 0, masksCanvas.width, masksCanvas.height);
-        masksCanvasCtx.setLineDash([6]);
-        // masksCanvasCtx.setStrokeColor("gray")
-        masksCanvasCtx.strokeRect(mouseX, mouseY, maskWidth, maskHeight);
+          masksCanvasCtx.clearRect(0, 0, masksCanvas.width, masksCanvas.height);
+          masksCanvasCtx.setLineDash([6]);
+          // masksCanvasCtx.setStrokeColor("gray")
+          masksCanvasCtx.strokeRect(mouseX, mouseY, maskWidth, maskHeight);
 
-        // update mask variables
-        maskDrawn = true;
-        maskBeginX = mouseX
-        maskBeginY = mouseY
-        maskWidth = maskWidth
-        maskHeight = maskHeight
+          // update mask variables
+          maskDrawn = true;
+          maskBeginX = mouseX
+          maskBeginY = mouseY
+          maskWidth = maskWidth
+          maskHeight = maskHeight
+        } else {
+          masksCanvasCtx.clearRect(0, 0, masksCanvas.width, masksCanvas.height);
+          maskDrawn = false;
+        }
 
       } else if ( $(".t.active").attr("id") == "ref_line" ) {
         drawRefLine(e, refLinesCanvasCtx);
