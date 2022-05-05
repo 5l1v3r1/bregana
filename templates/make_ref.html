@@ -102,9 +102,7 @@
     var maskHeight;
 
     $("#divider_canvas").mousedown(function (e) {
-      if ( $(".t.active").attr("id") == "ref_line" ) {
-        drawRefLine(e, refLinesCanvasCtx);
-      } else if ( $(".t.active").attr("id") == "pencil" ) {
+       if ( $(".t.active").attr("id") == "pencil" ) {
         mouseX = parseInt(e.clientX - offsetX);
         mouseY = parseInt(e.clientY - offsetY);
 
@@ -216,7 +214,7 @@
         var imageData = drawingCanvasCtx.getImageData(maskBeginX, maskBeginY, maskWidth, maskHeight)
         drawingCanvasCtx.clearRect(maskBeginX, maskBeginY, maskWidth, maskHeight)
         drawingCanvasCtx.putImageData(imageData, mouseX, mouseY)
-        
+
         masksCanvasCtx.clearRect(0, 0, masksCanvas.width, masksCanvas.height);
         masksCanvasCtx.setLineDash([6]);
         // masksCanvasCtx.setStrokeColor("gray")
@@ -228,6 +226,9 @@
         maskBeginY = startY
         maskWidth = width
         maskHeight = height
+
+      } else if ( $(".t.active").attr("id") == "ref_line" ) {
+        drawRefLine(e, refLinesCanvasCtx);
       }
     })
 
