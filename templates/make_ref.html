@@ -26,6 +26,9 @@
       border: 1px solid gray;
       position: absolute;
     }
+    #drawing_canvas {
+      background-color: #fff;
+    }
     h2, h3 {
       margin: 0px;
     }
@@ -223,7 +226,6 @@
           memCanvas.width = imageData.width
           memCanvas.height = imageData.height
 
-
           var memCanvasCtx = memCanvas.getContext("2d")
           memCanvasCtx.putImageData(imageData, 0, 0)
           drawingCanvasCtx.scale(-1, 1)
@@ -234,6 +236,35 @@
       }
 
       $(".t").removeClass("active")
+    });
+
+    $("#png").click(function(e) {
+      // add a white background
+      memCanvas = document.createElement('canvas');
+      // document.body.appendChild(memCanvas);
+      memCanvas.width = canvasWidth
+      memCanvas.height = canvasHeight
+
+      var memCanvasCtx = memCanvas.getContext("2d")
+      memCanvasCtx.fillStyle = "#ffffff"
+      memCanvasCtx.fillRect(0, 0, canvasWidth, canvasHeight)
+      memCanvasCtx.drawImage(drawingCanvas, 0, 0)
+
+
+
+      $.ajax({
+        type: "POST",
+        url: "/save_canvas_content",
+        data: {
+           imgBase64: memCanvas.toDataURL(),
+           imgName: "test_1.png"
+        }
+      }).done(function(o) {
+        console.log('saved');
+      });
+
+      $(".t").removeClass("active")
+
     })
 
 
@@ -300,6 +331,8 @@
     <hr>
     <button class="t" id="ref_line">Reference<br>Line</button><br>
     <button class="t" id="clear_ref_lines">Clear All<br>Reference<br>Lines</button><br>
+    <hr>
+    <button class="t" id="png">Save as PNG</button><br>
   </div>
 
   <div id="drawing_board" class="pane">
