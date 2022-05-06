@@ -4,6 +4,17 @@
   <title>Make Reference Image</title>
   <script src="/gs/jquery-3.6.0.min.js"></script>
   <style>
+  @font-face {
+    src: url("/gs/Quicksand-Regular.ttf");
+    font-family: "Quicksand"
+  }
+  body {
+    background-color: #ddd;
+    font-family: "Quicksand", sans-serif;
+  }
+  button {
+    font-family: "Quicksand", sans-serif;
+  }
     #left_side {
       width: 100px;
       float: left;
@@ -56,10 +67,10 @@
     mouseY = parseInt(e.clientY - offsetY);
     var randomColor = Math.floor(Math.random()*16777215).toString(16);
     if (e.ctrlKey == false) {
-      drawLine(ctx, [0, mouseY], [canvasWidth, mouseY], "#" + randomColor, 1)
+      drawLine(ctx, [0, mouseY], [canvasWidth, mouseY], "#" + randomColor, .5)
     } else {
       // erase line
-      ctx.clearRect(0, mouseY-1, canvasWidth, 2);
+      ctx.clearRect(0, mouseY-2, canvasWidth, 4);
     }
 
   }
@@ -156,6 +167,7 @@
         if (e.ctrlKey == false) {
           drawingCanvasCtx.globalCompositeOperation="source-over";
           drawingCanvasCtx.moveTo(lastX,lastY);
+          drawingCanvasCtx.lineWidth = 2;
           drawingCanvasCtx.lineTo(mouseX,mouseY);
           drawingCanvasCtx.stroke();
         } else {
@@ -209,15 +221,16 @@
 
     $("#symm").click(function(e) {
       if (maskDrawn) {
-        drawingCanvasCtx.clearRect(0, 0, canvasWidth/2, canvasHeight)
-        // clear mask
-        masksCanvasCtx.clearRect(0, 0, masksCanvas.width, masksCanvas.height);
-        maskDrawn = false;
 
         var x1 = maskBeginX + maskWidth
         var widthOfCutMask = x1 - (canvasWidth/2)
 
         if (widthOfCutMask > 0) {
+          drawingCanvasCtx.clearRect(0, 0, canvasWidth/2, canvasHeight)
+          // clear mask
+          masksCanvasCtx.clearRect(0, 0, masksCanvas.width, masksCanvas.height);
+          maskDrawn = false;
+
           drawingCanvasCtx.save()
           var imageData = drawingCanvasCtx.getImageData(canvasWidth/2, maskBeginY, widthOfCutMask, maskHeight)
 
@@ -311,6 +324,7 @@
       ctx.lineWidth = width;
     }
 
+    console.log(width)
     ctx.beginPath();
     ctx.moveTo(...begin);
     ctx.lineTo(...end);
