@@ -11,6 +11,7 @@
   body {
     background-color: #ddd;
     font-family: "Quicksand", sans-serif;
+    min-width: 1300px;
   }
   button {
     font-family: "Quicksand", sans-serif;
@@ -22,12 +23,9 @@
 
     #drawing_board {
       width: 1200px;
-      float: left;
+      margin-left: 110px;
     }
 
-    #drawing_board, #right_side {
-      margin-left: 10px;
-    }
     .pane h2 {
       width: fit-content;
       margin: 0 auto;
@@ -324,7 +322,6 @@
       ctx.lineWidth = width;
     }
 
-    console.log(width)
     ctx.beginPath();
     ctx.moveTo(...begin);
     ctx.lineTo(...end);
