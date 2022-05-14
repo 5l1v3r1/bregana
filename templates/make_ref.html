@@ -316,6 +316,15 @@
       }
     })
 
+    const hDialog = document.getElementById('helpDialog');
+    $("#help_btn").click(function(e) {
+      hDialog.showModal();
+    });
+
+    $("#close_btn").click(function(e) {
+      hDialog.close();
+    })
+
   })
 
   function drawLine(ctx, begin, end, stroke = 'black', width = 1) {
@@ -352,12 +361,29 @@
   </div>
 
   <div id="drawing_board" class="pane">
+    <button id="help_btn" style="float:left;">Help</button>
     <h2>Canvas</h2>
     <canvas id="drawing_canvas" width="1200" height="600" style="z-index: 10;"></canvas>
     <canvas id="masks_canvas" width="1200" height="600" style="z-index: 20;"></canvas>
     <canvas id="reflines_canvas" width="1200" height="600" style="z-index: 40;"></canvas>
     <canvas id="divider_canvas" width="1200" height="600" style="z-index: 60;"></canvas>
   </div>
+
+  <dialog id="helpDialog">
+    <h2>Help Instructions</h2>
+    <ol>
+      <li>The <b>Pencil</b> and the <b>Draw Mask Rectangle</b> are drag tools. The other tools are click tools</li>
+      <li>To delete a stroke drawn by the <b>Pencil</b> tool, press <b>ctrl</b> and drag with the <b>Pencil</b> tool</li>
+      <li>To delete a reference line drawn by the <b>Reference line</b> tool, press <b>ctrl</b> and click with the <b>Reference line</b> tool</li>
+      <li>To delete a mask drawn with the <b>Draw Mask Rectangle</b> tool, press <b>ctrl</b> and drag with the <b>Draw Mask Rectangle</b> tool</li>
+      <li>To move a drawing first create a <b>Mask</b> around it using the <b>Draw Mask Rectangle</b> tool.<br>
+        Next select the <b>Move</b> tool. Lastly move the mouse to where you want the drawing and click</li>
+      <li>The <b>Symmetrize</b> tool only works when placed on the line at the middle of the canvas. <br>
+        And it copies what is on the right side of the line to the left side.
+      </li>
+    </ol>
+    <button value="cancel" id="close_btn">Close</button>
+  </dialog>
 
   <dialog id="savePNGDialog">
     Your 3d reference has been saved to <b>{{.OutPath}}</b>
