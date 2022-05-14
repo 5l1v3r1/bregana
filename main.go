@@ -52,9 +52,13 @@ func main() {
 
 
     r.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+      type Context struct {
+        OutPath string
+      }
       tmpl := template.Must(template.ParseFS(content, "templates/make_ref.html"))
-      tmpl.Execute(w, nil)
+      tmpl.Execute(w, Context{rootPath})
     })
+
 
     r.HandleFunc("/save_canvas_content", func(w http.ResponseWriter, r *http.Request) {
       base64Str := r.FormValue("imgBase64")

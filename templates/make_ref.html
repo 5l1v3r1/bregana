@@ -271,7 +271,11 @@
            imgName: "test_1.png"
         }
       }).done(function(o) {
-        console.log('saved');
+        const spDialog = document.getElementById('savePNGDialog');
+        spDialog.showModal();
+        const hideDialogTimeout = setTimeout(function() {
+          spDialog.close();
+        }, 2000)
       });
 
       $(".t").removeClass("active")
@@ -354,5 +358,8 @@
     <canvas id="divider_canvas" width="1200" height="600" style="z-index: 60;"></canvas>
   </div>
 
+  <dialog id="savePNGDialog">
+    Your 3d reference has been saved to <b>{{.OutPath}}</b>
+  </dialog>
 </body>
 </html>
