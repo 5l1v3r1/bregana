@@ -2,6 +2,6 @@
 
 a 3d reference image tool
 
-## Install on Ubuntu
+## Install on Windows
 
-`sudo snap install bregana`
+Download from 
