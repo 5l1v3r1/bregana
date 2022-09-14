@@ -22,10 +22,6 @@ parts:
     source: .
     build-snaps:
     - go
-    build-packages:
-    - libelf-dev
-    - libgtk-3-dev
-    - libwebkit2gtk-4.0-dev
 
 
 apps:
