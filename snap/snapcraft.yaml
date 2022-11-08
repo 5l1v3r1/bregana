@@ -29,12 +29,12 @@ parts:
     - libwebkit2gtk-4.0-37
 
 layout:
-  /usr/:
-    bind: $SNAP/usr/
-  /var/:
-    bind: $SNAP/var/
-  /etc/:
-    bind: $SNAP/etc/
+  /usr:
+    bind: $SNAP/usr
+  /var:
+    bind: $SNAP/var
+  /etc:
+    bind: $SNAP/etc
 
 apps:
   bregana:
