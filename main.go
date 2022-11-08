@@ -116,6 +116,7 @@ func main() {
 	defer w.Destroy()
 	w.SetTitle("Bregana")
 	w.SetSize(1300, 700, webview.HintNone)
-	w.Navigate(fmt.Sprintf("http://127.0.0.1:%s", port))
+	w.SetHtml("helping him")
+	// w.Navigate(fmt.Sprintf("http://127.0.0.1:%s", port))
 	w.Run()
 }
