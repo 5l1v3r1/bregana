@@ -32,3 +32,5 @@ apps:
     extensions: [gnome]
     plugs:
     - network-bind
+    - process-control
+    - browser-support
