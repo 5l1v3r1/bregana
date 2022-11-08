@@ -39,6 +39,10 @@ apps:
     - process-control
     - browser-support
     layout:
-      /usr/lib/:
-        bind: $SNAP/usr/lib/
+      /usr:
+        bind: $SNAP/usr
+      /var:
+        bind: $SNAP/var
+      /etc:
+        bind: $SNAP/etc
     
