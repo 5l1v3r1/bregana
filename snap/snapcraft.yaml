@@ -33,8 +33,6 @@ apps:
   bregana:
     command: bin/bregana
     extensions: [gnome]
-    environment:
-      LD_LIBRARY_PATH: $SNAP/usr/lib/x86_64-linux-gnu/webkit2gtk-4.0/:$LD_LIBRARY_PATH
     plugs:
     - network
     - network-bind
