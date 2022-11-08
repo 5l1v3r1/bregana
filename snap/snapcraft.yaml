@@ -24,18 +24,18 @@ parts:
     - go
     build-packages:
     - libwebkit2gtk-4.0-dev
-    stage-packages:
-    - libgtk-3-0 
-    - libwebkit2gtk-4.0-37
+    # stage-packages:
+    # - libgtk-3-0 
+    # - libwebkit2gtk-4.0-37
 
-layout:
-  /usr/lib/x86_64-linux-gnu/webkit2gtk-4.0:
-    bind: $SNAP/usr/lib/x86_64-linux-gnu/webkit2gtk-4.0
+# layout:
+#   /usr/lib/$SNAPCRAFT_ARCH_TRIPLET/webkit2gtk-4.0:
+#     bind: $SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/webkit2gtk-4.0
 
 apps:
   bregana:
-    command: bin/bregana
     extensions: [gnome]
+    command: bin/bregana
     plugs:
     - network
     - network-bind
