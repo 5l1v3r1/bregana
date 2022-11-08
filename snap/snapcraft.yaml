@@ -28,6 +28,13 @@ parts:
     - libgtk-3-0 
     - libwebkit2gtk-4.0-37
 
+layout:
+  /usr:
+    bind: $SNAP/usr
+  /var:
+    bind: $SNAP/var
+  /etc:
+    bind: $SNAP/etc
 
 apps:
   bregana:
@@ -38,11 +45,5 @@ apps:
     - network-bind
     - process-control
     - browser-support
-    layout:
-      /usr:
-        bind: $SNAP/usr
-      /var:
-        bind: $SNAP/var
-      /etc:
-        bind: $SNAP/etc
+
     
