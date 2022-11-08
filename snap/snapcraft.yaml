@@ -25,7 +25,8 @@ parts:
     build-packages:
     - libwebkit2gtk-4.0-dev
     stage-packages:
-    - libwebkit2gtk-4.0-dev
+    - libgtk-3-0 
+    - libwebkit2gtk-4.0-37
 
 
 apps:
@@ -39,5 +40,4 @@ apps:
     - network-bind
     - process-control
     - browser-support
-    after: [snapcraft-preload] 
     
