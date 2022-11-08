@@ -38,4 +38,7 @@ apps:
     - network-bind
     - process-control
     - browser-support
+    layout:
+      /usr/lib/:
+        bind: $SNAP/usr/lib/
     
