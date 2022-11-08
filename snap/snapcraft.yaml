@@ -24,13 +24,20 @@ parts:
     - go
     build-packages:
     - libwebkit2gtk-4.0-dev
+    stage-packages:
+    - libwebkit2gtk-4.0-dev
 
 
 apps:
   bregana:
     command: bin/bregana
     extensions: [gnome]
+    environment:
+      LD_LIBRARY_PATH: $SNAP/usr/lib/x86_64-linux-gnu/webkit2gtk-4.0/:$LD_LIBRARY_PATH
     plugs:
+    - network
     - network-bind
     - process-control
     - browser-support
+
+after: [snapcraft-preload]
