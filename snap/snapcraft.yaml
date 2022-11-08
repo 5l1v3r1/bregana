@@ -39,5 +39,5 @@ apps:
     - network-bind
     - process-control
     - browser-support
-
-after: [snapcraft-preload]
+    after: [snapcraft-preload] 
+    
