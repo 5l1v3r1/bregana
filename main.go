@@ -10,12 +10,12 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
+	"os/signal"
 	"path/filepath"
 	"runtime"
 	"strings"
 
 	"github.com/gorilla/mux"
-	"github.com/webview/webview"
 )
 
 func main() {
@@ -99,24 +99,14 @@ func main() {
 	}()
 
 	fmt.Printf("Running at http://127.0.0.1:%s\n", port)
-	// if runtime.GOOS == "windows" {
-	// 	exec.Command("cmd", "/C", "start", fmt.Sprintf("http://127.0.0.1:%s", port)).Output()
-	// } else if runtime.GOOS == "linux" {
-	// 	exec.Command("xdg-open", fmt.Sprintf("http://127.0.0.1:%s", port)).Run()
-	// }
-	// // Wait until the interrupt signal arrives or browser window is closed
-	// sigc := make(chan os.Signal)
-	// signal.Notify(sigc, os.Interrupt)
-	// select {
-	// case <-sigc:
-	// }
-	// fmt.Println("Exiting")
-
-	w := webview.New(false)
-	defer w.Destroy()
-	w.SetTitle("Bregana")
-	w.SetSize(1300, 700, webview.HintNone)
-	w.SetHtml("helping him")
-	// w.Navigate(fmt.Sprintf("http://127.0.0.1:%s", port))
-	w.Run()
+	if runtime.GOOS == "windows" {
+		exec.Command("cmd", "/C", "start", fmt.Sprintf("http://127.0.0.1:%s", port)).Output()
+	} else if runtime.GOOS == "linux" {
+		exec.Command("xdg-open", fmt.Sprintf("http://127.0.0.1:%s", port)).Run()
+	}
+	// Wait until the interrupt signal arrives or browser window is closed
+	sigc := make(chan os.Signal, 5)
+	signal.Notify(sigc, os.Interrupt)
+	<-sigc
+	fmt.Println("Exiting")
 }
