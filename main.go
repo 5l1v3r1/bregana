@@ -16,9 +16,15 @@ import (
 	"strings"
 
 	"github.com/gorilla/mux"
+	"github.com/jchv/go-webview2"
 )
 
 func main() {
+	debug := false
+	if os.Getenv("SAENUMA_DEVELOPER") == "true" {
+		debug = true
+	}
+
 	rootPath, err := GetRootPath()
 	if err != nil {
 		panic(err)
@@ -98,15 +104,29 @@ func main() {
 
 	}()
 
-	fmt.Printf("Running at http://127.0.0.1:%s\n", port)
 	if runtime.GOOS == "windows" {
-		exec.Command("cmd", "/C", "start", fmt.Sprintf("http://127.0.0.1:%s", port)).Output()
+		w := webview2.NewWithOptions(webview2.WebViewOptions{
+			Debug:     debug,
+			AutoFocus: true,
+			WindowOptions: webview2.WindowOptions{
+				Title: "Bregana: A 3d reference image tool",
+			},
+		})
+		if w == nil {
+			log.Fatalln("Failed to load webview.")
+		}
+		defer w.Destroy()
+		w.SetSize(1400, 700, webview2.HintNone)
+		w.Navigate(fmt.Sprintf("http://127.0.0.1:%s", port))
+		w.Run()
 	} else if runtime.GOOS == "linux" {
+		fmt.Printf("Running at http://127.0.0.1:%s\n", port)
 		exec.Command("xdg-open", fmt.Sprintf("http://127.0.0.1:%s", port)).Run()
+		// Wait until the interrupt signal arrives or browser window is closed
+		sigc := make(chan os.Signal, 5)
+		signal.Notify(sigc, os.Interrupt)
+		<-sigc
+		fmt.Println("Exiting")
+
 	}
-	// Wait until the interrupt signal arrives or browser window is closed
-	sigc := make(chan os.Signal, 5)
-	signal.Notify(sigc, os.Interrupt)
-	<-sigc
-	fmt.Println("Exiting")
 }
